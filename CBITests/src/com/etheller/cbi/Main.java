@@ -13,8 +13,12 @@ public class Main {
 	public static final boolean REPORT_SYNTAX_ERRORS = true;
 
 	public static void main(final String[] args) {
+		if (args.length < 1) {
+			System.err.println("Usage: <CBFilename>");
+			return;
+		}
 		try {
-			final CBILexer lexer = new CBILexer(CharStreams.fromFileName("fib.cb"));
+			final CBILexer lexer = new CBILexer(CharStreams.fromFileName(args[0]));
 			final CBIParser parser = new CBIParser(new CommonTokenStream(lexer));
 			parser.addErrorListener(new BaseErrorListener() {
 				@Override
