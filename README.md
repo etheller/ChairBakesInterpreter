@@ -12,16 +12,11 @@ Then you should be able to run the interpreter on Chair Bakes source files that 
 java -jar CBITests-1.0.jar myProgram.cb
 ```
 
-Please remember, all Chair Bakes files must have a main function or object.
+Please remember, all Chair Bakes files must have a main function.
 
 Examples:
 ```
 func main [
 	print <-- "Hello world";
 ]
-```
-
-or you could go the route of a main object:
-```
-string main := "Hello world";
 ```
