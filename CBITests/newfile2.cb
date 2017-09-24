@@ -1,0 +1,40 @@
+
+func cout(int x) [
+	print <-- itoa <-- x;
+]
+
+func print_fib_run(int runid) [
+	string runid_str <-- itoa <-- runid;
+	print <-- ("fib run #" + runid_str);
+]
+
+func print_dbg(int runid) [
+	string runid_str <-- itoa <-- runid;
+	print <-- ("Dbg #" + runid_str);
+]
+
+
+func fib_rec(int n, int f1, int f2) [
+	capture n, f1, f2;
+	capture self;
+	f1 <-- f2;
+	f2 <-- self.f1 + self.f2;
+	capture int result;
+	maybe
+		n > 0
+	?
+		result <-- (fib_rec <-- [ capture {arg1 := n - 1, arg2 := f1, arg3 := f2 }; ]).result
+	or just
+		result <-- self.f1;
+]
+
+func fib(int n) [
+	fib_rec test <-- [ capture { int nVal := n, int f1 := 1, int f2 := 1 }; ];
+	capture int result := test.result;
+]
+
+func main [
+	fib donald;
+	donald.n <-- 6;
+	cout <-- donald;
+]

@@ -1,0 +1,61 @@
+func tester [
+	capture { int a, int b, int c, int d, string what };
+	print <-- 1;
+	a <-- 2;
+	print <-- a;
+	print <-- a <-- b <-- c <-- d <-- 102;
+	d --> print;
+	c --> print;
+	b --> print;
+	a --> print;
+	a <-- 2;
+	print <-- a;
+	print <-- "watch this one";
+	print <-- b;
+	print <-- "end";
+	
+	a <-- 1;
+	b <-- 2;
+	c <-- 3;
+	
+	(print <-- a);
+	print <-- b;
+	print <-- (a --> b);
+	
+	a <-- b --> c;
+	
+	("HOW CAN THIS BE" --> print);
+	print <-- what;
+]
+
+
+func foo () [
+    capture {int n := 7};
+    print <-- "foo is great";
+]
+
+func printer (int myNumber)[
+	print <-- myNumber;
+    print <-- "printer is great";
+	print <-- 3;
+]
+
+func oldmain() [
+	int x := 2;
+	print <-- x;
+    foo bar;
+    printer <-- bar; @ same as bar.n
+    printer <-- bar.n; @ same as bar.n
+]
+
+func printtwo [
+	int x := 3;
+	print <-- 2;
+	capture x;
+]
+
+func main() [
+	printtwo baz;
+	print <-- baz;
+	print <-- baz.x;
+]

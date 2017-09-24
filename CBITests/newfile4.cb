@@ -1,0 +1,34 @@
+func inc(int x) [
+	capture res := x+1;
+]
+
+func dec(int x) [
+	capture res := x-1;
+]
+
+func point(int x, int y) [
+	capture x,y;
+]
+
+func add(int x, int y) [
+	capture {x, y};
+	capture int res;
+	capture self;
+	maybe y == 0 ?
+		res <-- x
+	or just
+		res <-- (add <-- [ capture int a := x+1; capture int b := y-1;]).res;
+]
+
+func main() [
+	int a := 2;
+	add foo <-- [ capture int x := a; capture int y := 3; ];
+	add foo2 <-- [ capture int x := a; capture int y := 3; ];
+	add foo3 <-- [ capture int x := a; capture int y := 3; ];
+	
+	print <-- itoa <-- foo.res;
+	print <-- itoa <-- foo2.res;
+	print <-- itoa <-- foo3.res;
+	@int n := add <-- [ capture int x := 5; capture int y := 22; ];
+	@print <-- itoa <-- n;
+]

@@ -1,0 +1,13 @@
+func captureN(int n) [
+	capture n;
+	n <-- n + 1;
+	maybe n >= 8 ? n <-- n * 10 or just n --> n;
+]
+
+func main() [
+	captureN mycaptain <-- captureN <-- 3;
+	int n := mycaptain.n;
+	print <-- itoa <-- n;
+	print <-- itoa <-- captureN <-- 3;
+	print <-- itoa <-- captureN <-- captureN <-- captureN <-- captureN <-- captureN <-- 3;
+]

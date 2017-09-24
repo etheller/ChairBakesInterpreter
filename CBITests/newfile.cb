@@ -1,0 +1,26 @@
+func point [
+	int x := 0;
+	int y := 0;
+	capture x, y;
+]
+
+func point_double(point self) [
+	print <-- itoa <-- self.x;
+]
+
+func init_point(int x, int y) [
+	capture x, y;
+]
+
+func fib(int f)[
+
+]
+
+func main [
+	point faraway;
+	init_point basePoint := [ capture {int x := 2, int y := 3}; ];
+	faraway.x <-- 100;
+	point_double duple <-- faraway;
+	faraway.x <-- 200;
+	print <-- itoa <-- faraway.x;
+]

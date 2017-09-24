@@ -1,0 +1,20 @@
+func wrapper(int x) [
+	capture x;
+	x <-- x + 1;
+]
+
+func runner(int y) [
+	wrapper foo <-- [ capture int k := y; ];
+	foo.x <-- foo.x + 1;
+	print <-- itoa <-- foo;
+	capture foo;
+]
+
+func main [
+	runner run1 <-- 1;
+	print <-- itoa <-- run1.foo.x;
+	runner run2 <-- 1;
+	print <-- itoa <-- run2.foo.x;
+	runner run3 <-- 1;
+	print <-- itoa <-- run3.foo.x;
+]

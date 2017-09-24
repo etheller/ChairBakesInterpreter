@@ -1,0 +1,32 @@
+
+func cout(int x) [
+	print <-- itoa <-- x;
+]
+
+func fib_rec(int n, int f1, int f2) [
+	capture int n;
+	capture int f1, f2;
+	capture self;
+	self.f1 <-- f2;
+	self.f2 <-- (int a) [
+		capture a;
+	] <-- (f1 + f2);
+	self.n <-- n - 1;
+	capture int result := f1;
+	maybe self.n >= 0 ? (self --> fib_rec).result --> result or just "do nothing";
+]
+
+func fib(int n) [
+	fib_rec test <-- [ capture { int nVal := n, int f1 := 1, int f2 := 1 }; ];
+	capture int result := test.result;
+]
+
+func main [
+	cout <-- fib <-- 0;
+	cout <-- fib <-- 1;
+	cout <-- fib <-- 2;
+	cout <-- fib <-- 3;
+	cout <-- fib <-- 4;
+	cout <-- fib <-- 5;
+	cout <-- fib <-- 6;
+]
