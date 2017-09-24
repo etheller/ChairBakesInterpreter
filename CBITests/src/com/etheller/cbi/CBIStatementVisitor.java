@@ -6,6 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.etheller.cbi.parser.CBIBaseVisitor;
+import com.etheller.cbi.parser.CBIParser.CapturableContext;
+import com.etheller.cbi.parser.CBIParser.CaptureStatementContext;
+import com.etheller.cbi.parser.CBIParser.CompoundCaptureStatementContext;
+import com.etheller.cbi.parser.CBIParser.DeclarationContext;
+import com.etheller.cbi.parser.CBIParser.DeclarationStatementContext;
+import com.etheller.cbi.parser.CBIParser.ExpressionStatementContext;
+import com.etheller.cbi.parser.CBIParser.FuncDeclStatementContext;
+import com.etheller.cbi.parser.CBIParser.FunctionDefinitionStatementContext;
+import com.etheller.cbi.parser.CBIParser.ProgramContext;
 import com.etheller.cbi.tree.BooleanValue;
 import com.etheller.cbi.tree.Capturable;
 import com.etheller.cbi.tree.CaptureListValue;
@@ -29,16 +39,6 @@ import com.etheller.cbi.tree.StringHandleType;
 import com.etheller.cbi.tree.StringValue;
 import com.etheller.cbi.tree.TypedVariableHandle;
 import com.etheller.cbi.tree.ValueVisitor;
-import com.etheller.fiz.parser.CBIBaseVisitor;
-import com.etheller.fiz.parser.CBIParser.CapturableContext;
-import com.etheller.fiz.parser.CBIParser.CaptureStatementContext;
-import com.etheller.fiz.parser.CBIParser.CompoundCaptureStatementContext;
-import com.etheller.fiz.parser.CBIParser.DeclarationContext;
-import com.etheller.fiz.parser.CBIParser.DeclarationStatementContext;
-import com.etheller.fiz.parser.CBIParser.ExpressionStatementContext;
-import com.etheller.fiz.parser.CBIParser.FuncDeclStatementContext;
-import com.etheller.fiz.parser.CBIParser.FunctionDefinitionStatementContext;
-import com.etheller.fiz.parser.CBIParser.ProgramContext;
 
 public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 	private final HandleScope globalScope;

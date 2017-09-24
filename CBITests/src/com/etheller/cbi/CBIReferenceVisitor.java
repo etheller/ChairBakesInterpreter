@@ -1,9 +1,9 @@
 package com.etheller.cbi;
 
+import com.etheller.cbi.parser.CBIBaseVisitor;
+import com.etheller.cbi.parser.CBIParser.DirectReferenceContext;
 import com.etheller.cbi.tree.Reference;
 import com.etheller.cbi.tree.VariableReference;
-import com.etheller.fiz.parser.CBIBaseVisitor;
-import com.etheller.fiz.parser.CBIParser.DirectReferenceContext;
 
 public final class CBIReferenceVisitor extends CBIBaseVisitor<Reference> {
 

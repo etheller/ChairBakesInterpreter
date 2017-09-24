@@ -4,7 +4,7 @@
 grammar CBI;
 
 @header {
-	package com.etheller.fiz.parser;
+	package com.etheller.cbi.parser;
 }
 
 program :
@@ -21,7 +21,7 @@ statement :
 
 funcDeclStatement :
 	FUNC ID functionalExpression # FunctionDefinitionStatement
-	;
+	; 
 	
 	
 functionArgs :

@@ -6,8 +6,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-import com.etheller.fiz.parser.CBILexer;
-import com.etheller.fiz.parser.CBIParser;
+import com.etheller.cbi.parser.CBILexer;
+import com.etheller.cbi.parser.CBIParser;
 
 public class Main {
 	public static final boolean REPORT_SYNTAX_ERRORS = true;

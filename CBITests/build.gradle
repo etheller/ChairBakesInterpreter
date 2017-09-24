@@ -1,0 +1,49 @@
+apply plugin: "antlr"
+
+sourceCompatibility = 1.7
+sourceSets.main.java.srcDirs = [ "src/" , "build/generated-src" ]
+sourceSets.main.resources.srcDirs = [ "src/"]
+sourceSets.main.antlr.srcDirs = [ "." ]
+
+project.ext.mainClassName = "com.etheller.cbi.Main"
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    ignoreExitValue = true
+}
+
+task dist(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+    from {configurations.compile.collect {zipTree(it)}}
+ 
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+}
+
+dist.dependsOn classes
+
+eclipse {
+    project {
+        name = appName + "-cbi"
+    }
+}
+
+task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
+  doLast {
+    def classpath = new XmlParser().parse(file(".classpath"))
+    def writer = new FileWriter(file(".classpath"))
+    def printer = new XmlNodePrinter(new PrintWriter(writer))
+    printer.setPreserveWhitespace(true)
+    printer.print(classpath)
+  }
+}
+
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ["-visitor", "-no-listener"]
+    outputDirectory = file("build/generated-src/com/etheller/cbi/parser")
+}

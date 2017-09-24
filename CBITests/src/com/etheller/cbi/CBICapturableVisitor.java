@@ -1,5 +1,12 @@
 package com.etheller.cbi;
 
+import com.etheller.cbi.parser.CBIBaseVisitor;
+import com.etheller.cbi.parser.CBIParser.AssignedCapturableContext;
+import com.etheller.cbi.parser.CBIParser.AssignedDeclarationContext;
+import com.etheller.cbi.parser.CBIParser.AssignedImplicitTypeCapturableContext;
+import com.etheller.cbi.parser.CBIParser.TypedCapturableContext;
+import com.etheller.cbi.parser.CBIParser.TypedDeclarationContext;
+import com.etheller.cbi.parser.CBIParser.UntypedCapturableContext;
 import com.etheller.cbi.tree.AssignedCapturable;
 import com.etheller.cbi.tree.AssignedDeclaration;
 import com.etheller.cbi.tree.Capturable;
@@ -8,13 +15,6 @@ import com.etheller.cbi.tree.StringHandleType;
 import com.etheller.cbi.tree.TypedCapturable;
 import com.etheller.cbi.tree.TypedDeclaration;
 import com.etheller.cbi.tree.UntypedCapturable;
-import com.etheller.fiz.parser.CBIBaseVisitor;
-import com.etheller.fiz.parser.CBIParser.AssignedCapturableContext;
-import com.etheller.fiz.parser.CBIParser.AssignedDeclarationContext;
-import com.etheller.fiz.parser.CBIParser.AssignedImplicitTypeCapturableContext;
-import com.etheller.fiz.parser.CBIParser.TypedCapturableContext;
-import com.etheller.fiz.parser.CBIParser.TypedDeclarationContext;
-import com.etheller.fiz.parser.CBIParser.UntypedCapturableContext;
 
 public final class CBICapturableVisitor extends CBIBaseVisitor<Capturable> {
 	private final CBIExpressionVisitor expressionVisitor;
