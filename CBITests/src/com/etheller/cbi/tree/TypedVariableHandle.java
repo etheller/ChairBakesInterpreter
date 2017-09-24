@@ -63,7 +63,8 @@ public class TypedVariableHandle implements Handle {
 		expression.resolve().apply(new ValueVisitor() {
 			@Override
 			public void accept(final FunctionInstanceValue funcValue) {
-				value = new FunctionInstanceValue(funcValue.getFunction(), funcValue.getHandleScope());
+				value = new FunctionInstanceValue(funcValue.getFunction(), funcValue.getHandleScope(),
+						funcValue.getDeclaringScope());
 			}
 
 			@Override

@@ -56,7 +56,7 @@ public final class FunctionProcessor implements ValueVisitor {
 
 	@Override
 	public void accept(final FunctionInstanceValue funcValue) {
-		returnValScope = funcValue.getHandleScope();
+		returnValScope = funcValue.getEvaluationScope();
 	}
 
 	public HandleScope getReturnValScope() {

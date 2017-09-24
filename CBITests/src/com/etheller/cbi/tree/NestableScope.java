@@ -36,7 +36,7 @@ public final class NestableScope implements HandleScope {
 
 	@Override
 	public void capture(final String key) {
-		if (child.hasHandle(key)) {
+		if (child.hasHandle(key) || "self".equals(key)) {
 			child.capture(key);
 		} else {
 			parent.capture(key);
@@ -53,17 +53,17 @@ public final class NestableScope implements HandleScope {
 
 	@Override
 	public HandleScope captureScope(final boolean keepCaptureList) {
-		return child.captureScope(keepCaptureList);
+		return new NestableScope(parent, child.captureScope(keepCaptureList));
 	}
 
 	@Override
 	public HandleScope createEmptyScope() {
-		return child.createEmptyScope();
+		return new NestableScope(parent, child.createEmptyScope());
 	}
 
 	@Override
 	public HandleScope createFunctionScope(final List<FunctionParameter> parameter, final boolean isAnonymous) {
-		return child.createFunctionScope(parameter, isAnonymous);
+		return new NestableScope(parent, child.createFunctionScope(parameter, isAnonymous));
 	}
 
 	@Override

@@ -36,10 +36,10 @@ public class Main {
 					System.err.println(sourceName + "line " + line + ":" + charPositionInLine + " " + msg);
 				}
 			});
-			final CBIStatementVisitor fizEvaluator = new CBIStatementVisitor();
+			final CBIStatementVisitor fizEvaluator = new CBIStatementVisitor(args[0]);
 			fizEvaluator.visit(parser.program());
 		} catch (final Exception e) {
-			throw new RuntimeException(e);
+			System.err.println(e.getMessage());
 		}
 	}
 

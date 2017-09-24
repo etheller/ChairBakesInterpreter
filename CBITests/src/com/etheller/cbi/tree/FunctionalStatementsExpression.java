@@ -17,11 +17,16 @@ public final class FunctionalStatementsExpression implements Expression {
 	@Override
 	public FunctionInstanceHandle evaluate(final HandleScope scope) {
 		final HandleScope capturedScope = scope.createFunctionScope(parameters, anonymous);
+		final HandleScope nestedScopeForExecution = new NestableScope(scope, capturedScope);
 		for (final Statement statement : statements) {
-			statement.execute(capturedScope);
+			statement.execute(nestedScopeForExecution);
 		}
 		final ExpressionFunction anonymousFunction = new ExpressionFunction(this);
-		return new FunctionInstanceHandle(new FunctionInstanceValue(anonymousFunction, capturedScope));
+		// TODO double check scoping on returned function!
+		// Should anonymous functions who get executed later be able to execute
+		// again, still knowing the scope of their declaration?
+		return new FunctionInstanceHandle(new FunctionInstanceValue(anonymousFunction, capturedScope, scope));
+
 	}
 
 	public void setAnonymous(final boolean anonymous) {

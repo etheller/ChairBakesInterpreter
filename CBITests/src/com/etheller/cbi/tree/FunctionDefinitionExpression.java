@@ -11,9 +11,10 @@ public final class FunctionDefinitionExpression implements Expression {
 
 	@Override
 	public Handle evaluate(final HandleScope scope) {
-		final FunctionHandle handle = new FunctionHandle(function);
+		final FunctionHandle handle = new FunctionHandle(function, scope);
 		scope.createHandle(name, handle);
 		scope.capture(name);
-		return new FunctionInstanceHandle(new FunctionInstanceValue(function, scope));
+		// TODO scoping is wrong here
+		return new FunctionInstanceHandle(new FunctionInstanceValue(function, scope, scope));
 	}
 }

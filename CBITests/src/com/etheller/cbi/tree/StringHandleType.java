@@ -58,7 +58,7 @@ public final class StringHandleType implements HandleInstantiableType {
 			final Handle handle = scope.getHandle(typeName);
 			final FunctionFinderImpl visitor = new FunctionFinderImpl();
 			handle.resolve().apply(visitor);
-			return new FunctionInstanceHandle(new FunctionInstanceValue(visitor.getFunction(), scope));
+			return new FunctionInstanceHandle(new FunctionInstanceValue(visitor.getFunction(), scope, scope));
 		}
 		final TypedVariableHandle typedVariableHandle = new TypedVariableHandle(handleType);
 		return typedVariableHandle;

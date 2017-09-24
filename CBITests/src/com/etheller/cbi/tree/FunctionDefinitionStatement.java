@@ -11,7 +11,7 @@ public final class FunctionDefinitionStatement implements Statement {
 
 	@Override
 	public void execute(final HandleScope scope) {
-		scope.createHandle(name, new FunctionHandle(function));
+		scope.createHandle(name, new FunctionHandle(function, scope));
 		scope.capture(name);
 	}
 }

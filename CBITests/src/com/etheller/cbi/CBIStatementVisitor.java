@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 import com.etheller.cbi.parser.CBIBaseVisitor;
 import com.etheller.cbi.parser.CBIParser.CapturableContext;
 import com.etheller.cbi.parser.CBIParser.CaptureStatementContext;
@@ -33,20 +35,24 @@ import com.etheller.cbi.tree.FunctionalStatementsExpression;
 import com.etheller.cbi.tree.Handle;
 import com.etheller.cbi.tree.HandleScope;
 import com.etheller.cbi.tree.IntegerValue;
+import com.etheller.cbi.tree.NestableScope;
 import com.etheller.cbi.tree.NilValue;
 import com.etheller.cbi.tree.Statement;
+import com.etheller.cbi.tree.StatementWithLineNumber;
 import com.etheller.cbi.tree.StringHandleType;
 import com.etheller.cbi.tree.StringValue;
 import com.etheller.cbi.tree.TypedVariableHandle;
 import com.etheller.cbi.tree.ValueVisitor;
 
 public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
+	private final String sourceName;
 	private final HandleScope globalScope;
 	private final CBIReferenceVisitor referenceVisitor;
 	private final CBIExpressionVisitor expressionVisitor;
 	private final CBICapturableVisitor capturableVisitor;
 
-	public CBIStatementVisitor() {
+	public CBIStatementVisitor(final String sourceName) {
+		this.sourceName = sourceName;
 		final Map<String, Handle> defaultHandles = new HashMap<>();
 		createNatives(defaultHandles);
 		this.globalScope = new DynamicAssignableHandleScope(defaultHandles, defaultHandles);
@@ -58,7 +64,7 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 	@Override
 	public Statement visitExpressionStatement(final ExpressionStatementContext ctx) {
 		final Expression expression = expressionVisitor.visit(ctx.expr());
-		return new ExpressionStatement(expression);
+		return wrapStatement(ctx, new ExpressionStatement(expression));
 	}
 
 	@Override
@@ -68,7 +74,7 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 			final Capturable capturable = capturableVisitor.visit(capturableContext);
 			capturables.add(capturable);
 		}
-		return new CaptureStatement(capturables);
+		return wrapStatement(ctx, new CaptureStatement(capturables));
 	}
 
 	@Override
@@ -78,7 +84,7 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 			final Capturable capturable = capturableVisitor.visit(capturableContext);
 			capturables.add(capturable);
 		}
-		return new CaptureStatement(capturables);
+		return wrapStatement(ctx, new CaptureStatement(capturables));
 	}
 
 	@Override
@@ -88,7 +94,8 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 			final Capturable capturable = capturableVisitor.visit(capturableContext);
 			capturables.add(capturable);
 		}
-		return new CaptureStatement(capturables);
+		final CaptureStatement captureStatement = new CaptureStatement(capturables);
+		return wrapStatement(ctx, captureStatement);
 	}
 
 	@Override
@@ -97,14 +104,19 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 		final Expression expression = expressionVisitor.visit(ctx.functionalExpression());
 		// TODO fix bad cast
 		final FunctionalStatementsExpression functionalStatementsExpression = (FunctionalStatementsExpression) expression;
-		functionalStatementsExpression.setAnonymous(false);
-		return new FunctionDefinitionStatement(funcName, functionalStatementsExpression);
+		return wrapStatement(ctx, new FunctionDefinitionStatement(funcName, functionalStatementsExpression));
+	}
+
+	private StatementWithLineNumber wrapStatement(final ParserRuleContext ctx, final Statement captureStatement) {
+		return new StatementWithLineNumber(captureStatement, sourceName, ctx.getStart().getLine());
 	}
 
 	@Override
 	public Statement visitProgram(final ProgramContext ctx) {
 		for (final FuncDeclStatementContext statement : ctx.funcDeclStatement()) {
-			visit(statement).execute(globalScope);
+			final Statement cbiStatement = visit(statement);
+			// TODO set non anonymous functions
+			cbiStatement.execute(globalScope);
 		}
 		globalScope.getHandle("main").resolve().apply(new ValueVisitor() {
 
@@ -150,8 +162,8 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 		defaultHandles.put("print", new FunctionHandle(new Function() {
 			@Override
 			public HandleScope doFunction(final HandleScope handleScope) {
-				final HandleScope createFunctionScope = handleScope.createFunctionScope(
-						Arrays.asList(new FunctionParameter(new StringHandleType("string"), "text")), false);
+				final HandleScope createFunctionScope = new NestableScope(handleScope, handleScope.createFunctionScope(
+						Arrays.asList(new FunctionParameter(new StringHandleType("string"), "text")), false));
 				createFunctionScope.getHandle("text").resolve().apply(new ValueVisitor() {
 					@Override
 					public void accept(final NilValue nilValue) {
@@ -190,12 +202,12 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 				});
 				return globalScope;
 			}
-		}));
+		}, globalScope));
 		defaultHandles.put("itoa", new FunctionHandle(new Function() {
 			@Override
 			public HandleScope doFunction(final HandleScope handleScope) {
-				final HandleScope createFunctionScope = handleScope.createFunctionScope(
-						Arrays.asList(new FunctionParameter(new StringHandleType("int"), "integer")), false);
+				final HandleScope createFunctionScope = new NestableScope(handleScope, handleScope.createFunctionScope(
+						Arrays.asList(new FunctionParameter(new StringHandleType("int"), "integer")), false));
 				createFunctionScope.getHandle("integer").resolve().apply(new ValueVisitor() {
 					@Override
 					public void accept(final NilValue nilValue) {
@@ -237,6 +249,6 @@ public final class CBIStatementVisitor extends CBIBaseVisitor<Statement> {
 				});
 				return createFunctionScope;
 			}
-		}));
+		}, globalScope));
 	}
 }

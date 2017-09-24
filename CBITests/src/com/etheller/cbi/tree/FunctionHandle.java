@@ -5,17 +5,20 @@ import com.etheller.cbi.tree.util.FunctionProcessor;
 public final class FunctionHandle implements Handle {
 
 	private final Function function;
+	private final HandleScope parentDeclarationScope;
 
-	public FunctionHandle(final Function function) {
+	public FunctionHandle(final Function function, final HandleScope parentDeclarationScope) {
 		this.function = function;
+		this.parentDeclarationScope = parentDeclarationScope;
 	}
 
 	@Override
 	public Handle assign(final Handle expression, final HandleScope handleScope) {
 		final FunctionProcessor visitor = new FunctionProcessor(handleScope);
 		expression.resolve().apply(visitor);
-		return new FunctionInstanceHandle(
-				new FunctionInstanceValue(function, function.doFunction(visitor.getReturnValScope())));
+		return new FunctionInstanceHandle(new FunctionInstanceValue(function,
+				function.doFunction(new NestableScope(parentDeclarationScope, visitor.getReturnValScope())),
+				parentDeclarationScope));
 	}
 
 	@Override

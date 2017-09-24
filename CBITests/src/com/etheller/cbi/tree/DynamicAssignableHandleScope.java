@@ -17,14 +17,14 @@ public final class DynamicAssignableHandleScope implements HandleScope {
 		this.globals = globals;
 		this.nameToReference = new HashMap<>();
 		this.capturedNames = new ArrayList<>();
-		this.selfHandle = new FunctionInstanceHandle(new FunctionInstanceValue(new DoNothingFunction(), this));
+		this.selfHandle = new FunctionInstanceHandle(new FunctionInstanceValue(new DoNothingFunction(), this, this));
 	}
 
 	public DynamicAssignableHandleScope(final Map<String, Handle> globals, final Map<String, Handle> nameToReference) {
 		this.globals = globals;
 		this.nameToReference = nameToReference;
 		this.capturedNames = new ArrayList<>();
-		this.selfHandle = new FunctionInstanceHandle(new FunctionInstanceValue(new DoNothingFunction(), this));
+		this.selfHandle = new FunctionInstanceHandle(new FunctionInstanceValue(new DoNothingFunction(), this, this));
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public final class DynamicAssignableHandleScope implements HandleScope {
 	public void capture(final String key) {
 		capturedNames.add(key);
 		if (key.equals("self")) {
-			nameToReference.put("self",
-					new FunctionInstanceHandle(new FunctionInstanceValue(new DoNothingFunction(), crazyDeepCopy())));
+			nameToReference.put("self", new FunctionInstanceHandle(
+					new FunctionInstanceValue(new DoNothingFunction(), crazyDeepCopy(), this)));
 		}
 	}
 
@@ -116,12 +116,12 @@ public final class DynamicAssignableHandleScope implements HandleScope {
 			// TODO maybe Handle.assign here?
 			otherScope.nameToReference.put(nextParameter.getName(), nextCaptureHandle);
 		}
-		HandleScope result = otherScope;
-		if (anonymous) {
-			// otherScope.capturedNames.addAll(capturedNames);
-			result = new NestableScope(this, result);
-		}
-		return result;
+		// HandleScope result = otherScope;
+		// if (anonymous) {
+		// // otherScope.capturedNames.addAll(capturedNames);
+		// result = new NestableScope(this, result);
+		// }
+		return otherScope;
 	}
 
 	@Override

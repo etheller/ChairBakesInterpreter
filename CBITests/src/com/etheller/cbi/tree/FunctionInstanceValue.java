@@ -3,10 +3,13 @@ package com.etheller.cbi.tree;
 public final class FunctionInstanceValue implements Value {
 	private final Function function;
 	private HandleScope handleScope;
+	private final HandleScope declaringScope;
 
-	public FunctionInstanceValue(final Function function, final HandleScope sourceScope) {
+	public FunctionInstanceValue(final Function function, final HandleScope sourceScope,
+			final HandleScope declaringScope) {
 		this.function = function;
 		this.handleScope = sourceScope;
+		this.declaringScope = declaringScope;
 	}
 
 	@Override
@@ -29,6 +32,14 @@ public final class FunctionInstanceValue implements Value {
 
 	public void setHandleScope(final HandleScope handleScope) {
 		this.handleScope = handleScope;
+	}
+
+	public HandleScope getEvaluationScope() {
+		return new NestableScope(declaringScope, handleScope);
+	}
+
+	public HandleScope getDeclaringScope() {
+		return declaringScope;
 	}
 
 	@Override
